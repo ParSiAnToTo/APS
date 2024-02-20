@@ -27,11 +27,6 @@ public class Main {
                 list[a].add(b);
                 list[b].add(a);
             }
-
-            for (int i = 1; i < N+1; i++) { // list sorted
-                Collections.sort(list[i]);
-            }
-
             bw.write(bfs(list) + "\n");
         }
 
