@@ -3,22 +3,16 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.StringTokenizer;
 
 public class Main {
 
 	static int N, M, sea, result;
-	static int[][] iceberg, copyI;
+	static int[][] iceberg;
 	static boolean[][] checker, copyC;
 	static int[] dr = new int[] { 1, -1, 0, 0 };
 	static int[] dc = new int[] { 0, 0, 1, -1 };
-	static boolean flag;
-	static String hexaNum;
-	static HashSet<String> hashSet;
-	static ArrayList<String> list;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,7 +22,6 @@ public class Main {
 		M = Integer.parseInt(st.nextToken());
 		iceberg = new int[N][M];
 		checker = new boolean[N][M];
-		flag = false;
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < M; j++) {
@@ -43,7 +36,7 @@ public class Main {
 
 		int year = 0;
 
-		while (!flag) {
+		while (true) {
 			// 빙산 구역 개수 체크
 			copyC = new boolean[N][M];
 			for (int i = 0; i < N; i++) {
