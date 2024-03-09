@@ -7,7 +7,7 @@ public class Main {
     static boolean[] base = new boolean[4];
     static int[][] team;
     static boolean[] chk = new boolean[9];
-    static int inning, maxResult, gameResult, hit, batIndex, outCount, baseCount, idx;
+    static int inning, maxResult, gameResult, hit, batIndex, outCount;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
