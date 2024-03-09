@@ -7,7 +7,7 @@ public class Main {
     static int[][] team;
     static boolean[] chk = new boolean[9];
     static int inning, maxResult, gameResult, hit, batIndex, outCount, baseCount, idx;
-    static Queue<Integer> base;
+    static Queue<Integer> base = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -52,13 +52,14 @@ public class Main {
                 chk[i] = false;
             }
         }
+
+
     }
 
     public static int playGame(int[] arr, int[][] team) {
         gameResult = 0;
         batIndex = 0;
         outCount = 0;
-        base = new LinkedList<>();
         for (int i = 0; i < inning; i++) {
             outCount = 0;
             while (true) {
