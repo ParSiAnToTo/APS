@@ -4,10 +4,10 @@ import java.util.*;
 public class Main {
 
     static int[] tempNum = new int[9];
+    static boolean[] base = new boolean[4];
     static int[][] team;
     static boolean[] chk = new boolean[9];
     static int inning, maxResult, gameResult, hit, batIndex, outCount, baseCount, idx;
-    static Queue<Integer> base = new LinkedList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -52,8 +52,6 @@ public class Main {
                 chk[i] = false;
             }
         }
-
-
     }
 
     public static int playGame(int[] arr, int[][] team) {
@@ -67,29 +65,34 @@ public class Main {
 
                 if (hit == 0) {
                     outCount++;
-                } else {
-                    baseCount = base.size();
-                    idx = 0;
-                    while (idx < baseCount) {
-                        int runner = base.poll();
-                        if (runner + hit > 3) {
+                } else if (hit == 4) {
+                    for (int j = 0; j < 4; j++) {
+                        if (base[j]) {
                             gameResult++;
-                        } else {
-                            base.offer(runner + hit);
+                            base[j] = false;
                         }
-                        idx++;
                     }
-
-                    if (hit == 4) {
-                        gameResult++;
-                    } else {
-                        base.offer(hit);
+                    gameResult++;
+                } else {
+                    for (int j = 3; j > 0; j--) {
+                        if (base[j]) {
+                            if (j + hit > 3) {
+                                base[j] = false;
+                                gameResult++;
+                            } else {
+                                base[j] = false;
+                                base[j + hit] = true;
+                            }
+                        }
                     }
+                    base[hit] = true;
                 }
 
                 batIndex++;
                 if (outCount == 3) {
-                    base.clear();
+                    for (int j = 0; j < 4; j++) {
+                        base[j] = false;
+                    }
                     break;
                 }
             } // ith inning
