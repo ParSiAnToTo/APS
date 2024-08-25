@@ -7,7 +7,7 @@ public class Main {
     static final int INF = 100000;
     static int[] time = new int[maxPosition + 1];
 
-    static class SubinPosition implements Comparable<SubinPosition> {
+    static class SubinPosition {
         int position;
         int second;
 
@@ -15,32 +15,31 @@ public class Main {
             this.position = position;
             this.second = second;
         }
-
-        @Override
-        public int compareTo(SubinPosition o) {
-            return this.second - o.second;
-        }
     }
 
-    static void dijkstra(int startPosition) {
+    static void zeroOneBfs(int startPosition, int targetPosition) {
         time[startPosition] = 0;
-        PriorityQueue<SubinPosition> pq = new PriorityQueue();
-        pq.add(new SubinPosition(startPosition, 0));
+        Deque<SubinPosition> dq = new ArrayDeque<>();
+        dq.add(new SubinPosition(startPosition, 0));
 
-        while (!pq.isEmpty()) {
-            SubinPosition now = pq.poll();
+        while (!dq.isEmpty()) {
+            SubinPosition now = dq.poll();
 
+            if (now.position == targetPosition) {
+                break;
+            }
+
+            if (isValidMove(now.position * 2) && time[now.position * 2] > now.second) {
+                time[now.position * 2] = now.second;
+                dq.addFirst(new SubinPosition(now.position * 2, now.second));
+            }
             if (isValidMove(now.position + 1) && time[now.position + 1] > now.second + 1) {
                 time[now.position + 1] = now.second + 1;
-                pq.add(new SubinPosition(now.position + 1, now.second + 1));
+                dq.addLast(new SubinPosition(now.position + 1, now.second + 1));
             }
             if (isValidMove(now.position - 1) && time[now.position - 1] > now.second + 1) {
                 time[now.position - 1] = now.second + 1;
-                pq.add(new SubinPosition(now.position - 1, now.second + 1));
-            }
-            if (isValidMove(now.position * 2) && time[now.position * 2] > now.second) {
-                time[now.position * 2] = now.second;
-                pq.add(new SubinPosition(now.position * 2, now.second));
+                dq.addLast(new SubinPosition(now.position - 1, now.second + 1));
             }
         }
     }
@@ -62,7 +61,7 @@ public class Main {
             sb.append(N - K);
         } else {
             Arrays.fill(time, INF);
-            dijkstra(N);
+            zeroOneBfs(N, K);
             sb.append(time[K]);
         }
 
