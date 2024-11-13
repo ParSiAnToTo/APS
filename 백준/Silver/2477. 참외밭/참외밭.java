@@ -1,57 +1,55 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		int T = Integer.parseInt(br.readLine());
 
-		int[][] ways = new int[6][2];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < 6; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < 2; j++) {
-				ways[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
+        int K = Integer.parseInt(st.nextToken());
 
-		int maxh = 0;
-		int maxv = 0;
-		for (int i = 0; i < 6; i++) { // 육각형의 최대 높이, 폭 추적
-			if (ways[i][0] == 1 || ways[i][0] == 2) { // 폭 최대값 추적
-				if (maxh < ways[i][1]) {
-					maxh = ways[i][1];
-				}
-			}
+        int[][] lines = new int[6][2];
+        for (int i = 0; i < 6; i++) {
+            st = new StringTokenizer(br.readLine());
+            lines[i][0] = Integer.parseInt(st.nextToken());
+            lines[i][1] = Integer.parseInt(st.nextToken());
+        }
 
-			if (ways[i][0] == 3 || ways[i][0] == 4) { // 높이 최대값 추적
-				if (maxv < ways[i][1]) {
-					maxv = ways[i][1];
-				}
-			}
+        int maxHeight = 0;
+        int maxWidth = 0;
+        for (int i = 0; i < 6; i++) {
+            if (lines[i][0] < 3) {
+                maxWidth = Math.max(maxWidth, lines[i][1]);
+            } else {
+                maxHeight = Math.max(maxHeight, lines[i][1]);
+            }
+        }
 
-		}
+        int largeArea = maxWidth * maxHeight;
+        int amountOfMelon = 0;
 
-		int square = maxh * maxv;
-
-		int ans = 0; // 면적당 생산량 * (사각형 최대 면적 - 육각형 파인 면적)
-		for (int i = 0; i < 6; i++) {
-			if (ways[i % 6][0] == 3 && ways[(i + 1) % 6][0] == 2) { // ㅢ형태
-				ans = T * (square - ways[i % 6][1] * ways[(i + 1) % 6][1]);
-			} else if (ways[i % 6][0] == 2 && ways[(i + 1) % 6][0] == 4) { // ㄴ 형태
-				ans = T * (square - ways[i % 6][1] * ways[(i + 1) % 6][1]);
-			} else if (ways[i % 6][0] == 4 && ways[(i + 1) % 6][0] == 1) { // ㅣㅡ형태
-				ans = T * (square - ways[i % 6][1] * ways[(i + 1) % 6][1]);
-			} else if (ways[i % 6][0] == 1 && ways[(i + 1) % 6][0] == 3) { // ㄱ형태
-				ans = T * (square - ways[i % 6][1] * ways[(i + 1) % 6][1]);
-			}
-		}
-
-		System.out.println(ans);
-
-	}
+        for (int i = 0; i < 6; i++) {
+            if (lines[i % 6][0] == 3 && lines[(i + 1) % 6][0] == 2) {
+                amountOfMelon = K * (largeArea - lines[i % 6][1] * lines[(i + 1) % 6][1]);
+                break;
+            } else if (lines[i % 6][0] == 2 && lines[(i + 1) % 6][0] == 4) {
+                amountOfMelon = K * (largeArea - lines[i % 6][1] * lines[(i + 1) % 6][1]);
+                break;
+            } else if (lines[i % 6][0] == 4 && lines[(i + 1) % 6][0] == 1) {
+                amountOfMelon = K * (largeArea - lines[i % 6][1] * lines[(i + 1) % 6][1]);
+                break;
+            } else if (lines[i % 6][0] == 1 && lines[(i + 1) % 6][0] == 3) {
+                amountOfMelon = K * (largeArea - lines[i % 6][1] * lines[(i + 1) % 6][1]);
+                break;
+            }
+        }
+        
+        sb.append(amountOfMelon);
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
 }
