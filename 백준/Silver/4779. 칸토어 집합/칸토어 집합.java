@@ -1,55 +1,49 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
 
-	static boolean[] chk;
-	
-	static void cantorSet(int st, int ed, int depth) {
-		if (depth != 0) {
-			
-		
+    static boolean[] line;
 
-		int midSt = ed / 3 + st;
-		int midEd = midSt + ed / 3;
+    static void cantorSet(int st, int ed, int depth) {
+        if (depth == 0) {
+            return;
+        }
+        int third = (ed - st) / 3;
+        int thirdSt = st + third;
+        int thirdEd = thirdSt + third;
+        for (int i = thirdSt; i < thirdEd; i++) {
+            line[i] = true;
+        }
+        cantorSet(st, thirdSt, depth - 1);
+        cantorSet(thirdEd, ed, depth - 1);
+    }
 
-		for (int i = midSt; i < midEd; i++) {
-			chk[i] = true;
-		}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-		cantorSet(st, (int) Math.pow(3, depth - 1), depth - 1);
-		cantorSet(midEd, (int) Math.pow(3, depth - 1), depth - 1);
-		}
-	}
+        String N;
+        while ((N = br.readLine()) != null && !N.isEmpty()) {
+            int value = Integer.parseInt(N);
+            int length = (int) Math.pow(3, value);
+            line = new boolean[length];
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String line;
-		StringBuilder sb= new StringBuilder();	
-		while ((line = br.readLine()) != null && !line.isEmpty()) {
-			int N = Integer.parseInt(line);
-			int len = (int) Math.pow(3, N);
-			chk = new boolean[len];
+            cantorSet(0, length, value);
 
-			cantorSet(0, len, N);
+            for (int i = 0; i < line.length; i++) {
+                if (line[i]) {
+                    sb.append(" ");
+                } else {
+                    sb.append("-");
+                }
+            }
 
-			
-			for (int i = 0; i < chk.length; i++) {
-				if (!chk[i]) {
-					sb.append("-");
-				} else {
-					sb.append(" ");
-				}
+            sb.append("\n");
+        }
 
-			}
-
-			sb.append("\n");
-
-		}
-		
-		System.out.println(sb.toString());
-
-	} // main
-
-}// class
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+}
