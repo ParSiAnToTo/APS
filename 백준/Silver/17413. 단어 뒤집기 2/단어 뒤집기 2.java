@@ -1,48 +1,48 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Stack;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String S = br.readLine();
-		br.close();
-		StringBuilder sb = new StringBuilder();
-		Stack<Character> stack = new Stack<Character>();
-		int len = S.length();
 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-		boolean meetBracket = false;
-		for(int i=0; i<len; i++) {
-			if(S.charAt(i)=='<') { 
-				while(!stack.isEmpty()) {
-					sb.append(stack.pop());
-				}
-				sb.append(S.charAt(i));
-				meetBracket = true;
-			} else if (S.charAt(i)=='>') {
-				sb.append(S.charAt(i));
-				meetBracket = false;
-			} else if (S.charAt(i)==' ') {
-				while(!stack.isEmpty()) {
-					sb.append(stack.pop());
-				}
-				sb.append(S.charAt(i));
-			} else if (meetBracket) {
-				sb.append(S.charAt(i));
-			} else if (i==len-1){
-				stack.push(S.charAt(i));
-				while(!stack.isEmpty()) {
-					sb.append(stack.pop());
-				}
-			} else {
-				stack.push(S.charAt(i));
-			}
-		}
+        String s = br.readLine();
+        Stack<Character> stack = new Stack<>();
+        boolean flag = false;
 
-		System.out.println(sb);
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
 
-	}
+            if (c == '<') {
+                flag = true;
+                while (!stack.isEmpty()) {
+                    sb.append(stack.pop());
+                }
+                sb.append(c);
+            } else if (c == '>') {
+                flag = false;
+                sb.append(c);
+            } else if (c == ' ') {
+                while (!stack.isEmpty()) {
+                    sb.append(stack.pop());
+                }
+                sb.append(c);
+            } else if (flag) {
+                sb.append(c);
+            } else if (i == s.length() - 1) {
+                stack.push(c);
+                while (!stack.isEmpty()) {
+                    sb.append(stack.pop());
+                }
+            } else {
+                stack.push(c);
+            }
+        }
 
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
 }
