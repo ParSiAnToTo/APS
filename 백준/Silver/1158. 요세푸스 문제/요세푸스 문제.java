@@ -1,29 +1,36 @@
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		int K = sc.nextInt();
 
-		Queue<Integer> queue = new LinkedList<>(); // 큐 선언
-		for (int i = 1; i <= N; i++) { // 큐에 1~N 삽입
-			queue.offer(i);
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("<");
-		while (queue.size() != 1) { // 큐 크기가 1이 될 때까지 반복
-			for (int i = 1; i < K; i++) { // K번째가 되기 전까지 큐에서 poll - offer 반복
-				int reInsult = queue.poll();
-				queue.offer(reInsult);
-			}
-			sb.append(queue.poll() + ", "); // K번째 값 더하기
-		}
-		sb.append(queue.poll() + ">"); //마지막 값 추가 후 닫기
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-		System.out.println(sb); //결과 출력
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-	}
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 1; i <= N; i++) {
+            q.add(i);
+        }
+
+        sb.append("<");
+        while (!q.isEmpty()) {
+            for (int i = 1; i < K; i++) {
+                q.add(q.poll());
+            }
+            sb.append(q.poll()).append(", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append(">");
+
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
 }
