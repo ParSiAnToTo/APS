@@ -1,54 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		int N = Integer.parseInt(st.nextToken());
-		Stack<Integer> stack = new Stack<>();
-		
-		for (int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			String command = st.nextToken();
-			switch (command) {
-			case "push":
-				stack.push(Integer.parseInt(st.nextToken()));
-				break;
-			case "pop":
-				if (!stack.isEmpty()) {
-					System.out.println(stack.pop());
-				} else {
-					System.out.println(-1);
-				}
-				break;
-			case "size":
-				System.out.println(stack.size());
-				break;
-			case "empty":
-				if (!stack.isEmpty()) {
-					System.out.println(0);
-				} else {
-					System.out.println(1);
-				}
-				break;
-			case "top":
-				if (!stack.isEmpty()) {
-					System.out.println(stack.peek());
-				} else {
-					System.out.println(-1);
-				}
-				break;
-			default:
-				break;
-			}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
 
-		}
+        int N = Integer.parseInt(br.readLine());
+        Stack<Integer> stack = new Stack<>();
 
-	}// end of main
+        for (int commandIndex = 0; commandIndex < N; commandIndex++) {
+            st = new StringTokenizer(br.readLine());
+            String command = st.nextToken();
 
-}// end of class
+            switch (command) {
+                case "push":
+                    stack.push(Integer.parseInt(st.nextToken()));
+                    break;
+                case "pop":
+                    if (!stack.isEmpty()) {
+                        sb.append(stack.pop()).append("\n");
+                    } else {
+                        sb.append("-1").append("\n");
+                    }
+                    break;
+                case "size":
+                    sb.append(stack.size()).append("\n");
+                    break;
+                case "empty":
+                    if (!stack.isEmpty()) {
+                        sb.append("0").append("\n");
+                    } else {
+                        sb.append("1").append("\n");
+                    }
+                    break;
+                case "top":
+                    if (!stack.isEmpty()) {
+                        sb.append(stack.peek()).append("\n");
+                    } else {
+                        sb.append("-1").append("\n");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+}
