@@ -13,7 +13,7 @@ public class Main {
 
         for (int i = 0; i < testCase; i++) {
             Queue<Integer> q = new LinkedList<>();
-            ArrayList<Integer> priorityList = new ArrayList<>();
+            PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
 
             st = new StringTokenizer(br.readLine());
             int docsCount = Integer.parseInt(st.nextToken());
@@ -23,27 +23,23 @@ public class Main {
             for (int index = 0; index < docsCount; index++) {
                 int priority = Integer.parseInt(st.nextToken()) * 1000;
                 q.add(priority + index);
-                priorityList.add(priority);
+                pq.add(priority);
             }
-            Collections.sort(priorityList, Collections.reverseOrder());
 
             int printIndex = 1;
-            int priorityIndex = 0;
-            int highestPriority = priorityList.get(priorityIndex);
 
             while (true) {
-                while (q.peek() / 1000 != highestPriority / 1000) {
+                while (q.peek() / 1000 != pq.peek() / 1000) {
                     q.add(q.poll());
                 }
                 int docs = q.poll();
+                pq.poll();
                 if (docs % 1000 == targetDocsIndex) {
                     sb.append(printIndex + "\n");
                     break;
                 }
 
                 printIndex++;
-                priorityIndex++;
-                highestPriority = priorityList.get(priorityIndex);
             }
         }
 
