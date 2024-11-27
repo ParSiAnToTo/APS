@@ -3,6 +3,16 @@ import java.util.*;
 
 public class Main {
 
+    static class Document {
+        int index;
+        int priority;
+
+        public Document(int index, int priority) {
+            this.index = index;
+            this.priority = priority;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -12,7 +22,7 @@ public class Main {
         int testCase = Integer.parseInt(br.readLine());
 
         for (int i = 0; i < testCase; i++) {
-            Queue<Integer> q = new LinkedList<>();
+            Queue<Document> q = new LinkedList<>();
             PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
 
             st = new StringTokenizer(br.readLine());
@@ -21,25 +31,25 @@ public class Main {
 
             st = new StringTokenizer(br.readLine());
             for (int index = 0; index < docsCount; index++) {
-                int priority = Integer.parseInt(st.nextToken()) * 1000;
-                q.add(priority + index);
+                int priority = Integer.parseInt(st.nextToken());
+                q.add(new Document(index, priority));
                 pq.add(priority);
             }
 
-            int printIndex = 1;
+            int printIndex = 0;
 
-            while (true) {
-                while (q.peek() / 1000 != pq.peek() / 1000) {
-                    q.add(q.poll());
+            while (!q.isEmpty()) {
+                Document doc = q.poll();
+                if (doc.priority == pq.peek()) {
+                    printIndex++;
+                    pq.poll();
+                    if (doc.index == targetDocsIndex) {
+                        sb.append(printIndex).append("\n");
+                        break;
+                    }
+                } else {
+                    q.add(doc);
                 }
-                int docs = q.poll();
-                pq.poll();
-                if (docs % 1000 == targetDocsIndex) {
-                    sb.append(printIndex + "\n");
-                    break;
-                }
-
-                printIndex++;
             }
         }
 
