@@ -15,7 +15,9 @@ public class Main {
 
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
         for (int i = 0; i < N; i++) {
-            pq.add(Integer.parseInt(br.readLine()));
+            int giantHeight = Integer.parseInt(br.readLine());
+            if(giantHeight >= H) {}
+            pq.add(giantHeight);
         }
 
         int count = 0;
