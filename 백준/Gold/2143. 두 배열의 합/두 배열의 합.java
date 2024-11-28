@@ -3,25 +3,26 @@ import java.util.*;
 
 public class Main {
 
-    static HashMap<Integer, Integer> combSubSum(int[] arr) {
+    static HashMap<Integer, Integer> combSubSum(ArrayList<Integer> arr) {
         HashMap<Integer, Integer> map = new HashMap<>();
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = i; j < arr.length; j++) {
-                int sum = arr[j] - (i > 0 ? arr[i - 1] : 0);
+        int size = arr.size();
+        for (int i = 0; i < size; i++) {
+            for (int j = i; j < size; j++) {
+                int sum = arr.get(j) - (i > 0 ? arr.get(i - 1) : 0);
                 map.put(sum, map.getOrDefault(sum, 0) + 1);
             }
         }
         return map;
     }
 
-    static int[] inputArray(BufferedReader br) throws IOException {
+    static ArrayList<Integer> inputArray(BufferedReader br) throws IOException {
         int len = Integer.parseInt(br.readLine());
-        int[] arr = new int[len];
+        ArrayList<Integer> arr = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(br.readLine());
-        arr[0] = Integer.parseInt(st.nextToken());
+        arr.add(Integer.parseInt(st.nextToken()));
         if (len > 1) {
             for (int i = 1; i < len; i++) {
-                arr[i] = arr[i - 1] + Integer.parseInt(st.nextToken());
+                arr.add(arr.get(i - 1) + Integer.parseInt(st.nextToken()));
             }
         }
         return arr;
@@ -32,8 +33,8 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int T = Integer.parseInt(br.readLine());
-        int[] arrA = inputArray(br);
-        int[] arrB = inputArray(br);
+        ArrayList<Integer> arrA = inputArray(br);
+        ArrayList<Integer> arrB = inputArray(br);
 
         HashMap<Integer, Integer> subSumA = combSubSum(arrA);
         HashMap<Integer, Integer> subSumB = combSubSum(arrB);
