@@ -11,15 +11,16 @@ public class Main {
         int N = sc.nextInt();
         String hashFunction = sc.next();
 
-
         BigInteger decode = BigInteger.ZERO;
         BigInteger key = BigInteger.valueOf(31);
         BigInteger pow = BigInteger.ONE;
+        BigInteger mod = BigInteger.valueOf(1234567891);
         for (int i = 0; i < N; i++) {
             int x = hashFunction.charAt(i) - 'a' + 1;
             decode = decode.add(BigInteger.valueOf(x).multiply(pow));
             pow = pow.multiply(key);
         }
+        decode = decode.mod(mod);
 
         bw.write(decode.toString());
         bw.flush();
