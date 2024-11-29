@@ -1,51 +1,31 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.*;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
 
-    static int R, C, sheepCount, wolfCount;
-    static char[][] field;
+    /*상하좌우 이동, 울타리인지, 방문하였는지*/
+
     static boolean[][] visited;
-    static int[] dr = {-1, 1, 0, 0};
-    static int[] dc = {0, 0, -1, 1};
+    static char[][] field;
+    static int sheepCount;
+    static int wolfCount;
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
 
-    static void sheepAndWolfCheck(int r, int c) {
-        Queue<int[]> q = new ArrayDeque<>();
-        int subSheepCount = 0;
-        int subWolfCount = 0;
 
-        q.add(new int[]{r, c});
-        visited[r][c] = true;
-
-        while (!q.isEmpty()) {
-            int[] cur = q.poll();
-
-            if (field[cur[0]][cur[1]] == 'v') {
-                subWolfCount++;
-            } else if (field[cur[0]][cur[1]] == 'k') {
-                subSheepCount++;
-            }
-
-            for (int k = 0; k < 4; k++) {
-                int nr = cur[0] + dr[k];
-                int nc = cur[1] + dc[k];
-                if (nr >= 0 && nc >= 0 && nr < R && nc < C) {
-                    if (!visited[nr][nc]) {
-                        visited[nr][nc] = true;
-                        q.add(new int[]{nr, nc});
-                    }
-                }
-            }
+    static void dfs(int x, int y) {
+        visited[x][y] = true;
+        if (field[x][y] == 'k') {
+            sheepCount++;
+        } else if (field[x][y] == 'v') {
+            wolfCount++;
         }
-
-        if (subSheepCount > subWolfCount) {
-            sheepCount += subSheepCount;
-        } else {
-            wolfCount += subWolfCount;
+        for (int i = 0; i < 4; i++) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            if (nx >= 0 && nx < field.length && ny >= 0 && ny < field[nx].length && !visited[nx][ny]) {
+                dfs(nx, ny);
+            }
         }
     }
 
@@ -54,33 +34,42 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
         StringBuilder sb = new StringBuilder();
-
-        R = Integer.parseInt(st.nextToken());
-        C = Integer.parseInt(st.nextToken());
+        int R = Integer.parseInt(st.nextToken());
+        int C = Integer.parseInt(st.nextToken());
         field = new char[R][C];
         visited = new boolean[R][C];
 
         for (int i = 0; i < R; i++) {
             String line = br.readLine();
             for (int j = 0; j < C; j++) {
-                char type = line.charAt(j);
-                field[i][j] = type;
-                if (type == '#') {
+                char c = line.charAt(j);
+                field[i][j] = c;
+                if (c == '#') {
                     visited[i][j] = true;
                 }
             }
         }
 
+        int sheepCnt = 0;
+        int wolfCnt = 0;
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
                 if (!visited[i][j]) {
-                    sheepAndWolfCheck(i, j);
+
+                    dfs(i, j);
+                    if (sheepCount > wolfCount) {
+                        sheepCnt += sheepCount;
+                    } else {
+                        wolfCnt += wolfCount;
+                    }
+
+                    sheepCount = 0;
+                    wolfCount = 0;
                 }
             }
         }
 
-        sb.append(sheepCount).append(" ").append(wolfCount);
-
+        sb.append(sheepCnt).append(" ").append(wolfCnt);
         bw.write(sb.toString());
         bw.flush();
         bw.close();
