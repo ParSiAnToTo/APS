@@ -1,57 +1,47 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	static class Dict implements Comparable<Dict> {
-		String sentense;
-		int len;
+    static class sentence implements Comparable<sentence> {
+        int len;
+        String word;
 
-		public Dict(String sentense, int len) {
-			this.sentense = sentense;
-			this.len = len;
-		}
+        public sentence(int len, String word) {
+            this.len = len;
+            this.word = word;
+        }
 
-		@Override
-		public int compareTo(Dict o) {
-			if (this.len != o.len) {
-				return this.len - o.len;
-			} else {
-				return this.sentense.compareTo(o.sentense);
-			}
-		}
-	}
+        @Override
+        public int compareTo(sentence o) {
+            if (this.len != o.len) {
+                return this.len - o.len;
+            } else {
+                return this.word.compareTo(o.word);
+            }
+        }
+    }
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		int N = Integer.parseInt(br.readLine());
-		HashSet<String> set = new HashSet<>();
-		PriorityQueue<Dict> pq = new PriorityQueue<>();
-		for (int i = 0; i < N; i++) {
-			String sentense = br.readLine();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-			if (!set.contains(sentense)) {
-				set.add(sentense);
-			} else {
-				continue;
-			}
-			pq.add(new Dict(sentense, sentense.length()));
-		}
+        int N = Integer.parseInt(st.nextToken());
 
-		while (!pq.isEmpty()) {
-			bw.write(pq.poll().sentense + "\n");
-		}
+        TreeSet<sentence> set = new TreeSet<>();
+        for (int i = 0; i < N; i++) {
+            String word = br.readLine();
+            set.add(new sentence(word.length(), word));
+        }
 
-		bw.flush();
-		bw.close();
-		br.close();
+        for (sentence s : set) {
+            sb.append(s.word).append('\n');
+        }
 
-	} // end of main
-
-} // end of class
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+}
