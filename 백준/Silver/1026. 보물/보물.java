@@ -9,24 +9,20 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         int N = Integer.parseInt(st.nextToken());
-        
+
         int[] A = new int[N];
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
             A[i] = Integer.parseInt(st.nextToken());
         }
-        
-        int[] B = new int[N];
+
+        int[] frequency = new int[101];
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
-            B[i] = Integer.parseInt(st.nextToken());
+            frequency[Integer.parseInt(st.nextToken())]++;
         }
 
         Arrays.sort(A);
-        int[] frequency = new int[101];
-        for (int i = 0; i < N; i++) {
-            frequency[B[i]]++;
-        }
 
         int answer = 0;
         int index = 0;
