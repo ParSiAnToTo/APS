@@ -1,102 +1,83 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	static int M, N, H, sec;
-	static int[][][] tomatoBox;
-	static int[] dr = { 0, 0, -1, 1, 0, 0 };
-	static int[] dc = { -1, 1, 0, 0, 0, 0 };
-	static int[] dh = { 0, 0, 0, 0, -1, 1 };
 
-	static class point {
-		int h;
-		int r;
-		int c;
+    static int M, N, H, tomatoCount;
+    static int[][][] tomatoBox;
+    static Queue<int[]> queue;
+    static int[] dr = {0, 0, -1, 1, 0, 0};
+    static int[] dc = {-1, 1, 0, 0, 0, 0};
+    static int[] dh = {0, 0, 0, 0, -1, 1};
 
-		public point(int h, int r, int c) {
-			// TODO Auto-generated constructor stub
-			this.h = h;
-			this.r = r;
-			this.c = c;
-		}
-	}
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		M = Integer.parseInt(st.nextToken());
-		N = Integer.parseInt(st.nextToken());
-		H = Integer.parseInt(st.nextToken());
-		tomatoBox = new int[H][N][M];
-		boolean chk = false;
-		for (int i = 0; i < H; i++) {
-			for (int j = 0; j < N; j++) {
-				st = new StringTokenizer(br.readLine(), " ");
-				for (int j2 = 0; j2 < M; j2++) {
-					tomatoBox[i][j][j2] = Integer.parseInt(st.nextToken());
-				}
-			}
-		}
+    static int bfs() {
+        int sec = 0;
 
-		bfs();
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                int[] tomato = queue.poll();
 
-		for (int i = 0; i < H; i++) {
-			for (int j = 0; j < N; j++) {
-				for (int j2 = 0; j2 < M; j2++) {
-					if (tomatoBox[i][j][j2] == 0) {
-						chk = true;
-					}
-				}
-			}
-		}
-		if (chk) {
-			System.out.println(-1);
-		} else {
-			System.out.println(sec - 1);
-		}
+                for (int dir = 0; dir < 6; dir++) {
+                    int nr = tomato[0] + dr[dir];
+                    int nc = tomato[1] + dc[dir];
+                    int nh = tomato[2] + dh[dir];
+                    if (nr >= 0 && nr < M && nc >= 0 && nc < N && nh >= 0 && nh < H) {
+                        if (tomatoBox[nr][nc][nh] == 0) {
+                            tomatoBox[nr][nc][nh] = 1;
+                            queue.add(new int[]{nr, nc, nh});
+                        }
+                    }
+                }
+            }
+            sec++;
+        }
 
-	}// end of main
+        return sec;
+    }
 
-	static void bfs() {
-		Queue<point> q = new LinkedList<>();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-		for (int i = 0; i < H; i++) {
-			for (int j = 0; j < N; j++) {
-				for (int j2 = 0; j2 < M; j2++) {
-					if (tomatoBox[i][j][j2] == 1) {
-						q.offer(new point(i, j, j2));
-					}
-				}
-			}
-		}
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        H = Integer.parseInt(st.nextToken());
 
-		while (!q.isEmpty()) {
-			int size = q.size();
-			for (int i = 0; i < size; i++) {
-				point dot = q.poll();
+        tomatoBox = new int[M][N][H];
+        queue = new LinkedList<>();
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < N; j++) {
+                st = new StringTokenizer(br.readLine());
+                for (int k = 0; k < M; k++) {
+                    int tomatoStatus = Integer.parseInt(st.nextToken());
+                    tomatoBox[k][j][i] = tomatoStatus;
+                    if (tomatoStatus == 1) {
+                        queue.add(new int[]{k, j, i});
+                    }
+                }
+            }
+        }
 
-				for (int j = 0; j < 6; j++) {
-					int nh = dot.h + dh[j];
-					int nr = dot.r + dr[j];
-					int nc = dot.c + dc[j];
-					if (nh >= 0 && nh < H && nr >= 0 && nr < N && nc >= 0 && nc < M) {
-						if (tomatoBox[nh][nr][nc] == 0) {
-							q.offer(new point(nh, nr, nc));
-							tomatoBox[nh][nr][nc]=1;
-						}
-					}
-				} // delta for
+        int ripeTime = bfs();
 
-			} // queue for
+        boolean chk = false;
+        outer:
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < N; j++) {
+                for (int k = 0; k < M; k++) {
+                    if (tomatoBox[k][j][i] == 0) {
+                        chk = true;
+                        break outer;
+                    }
+                }
+            }
+        }
 
-			sec++;
-
-		} // while
-
-	}// bfs
-
-}// end of class
+        bw.write(String.valueOf(chk ? -1 : ripeTime - 1));
+        bw.flush();
+        bw.close();
+    }
+}
