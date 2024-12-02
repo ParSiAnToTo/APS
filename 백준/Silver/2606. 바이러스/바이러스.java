@@ -1,50 +1,58 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	static int N;
-	static int[][] adj;
-	static int cnt;
+    static boolean[] visited;
+    static List<Integer>[] adjList;
 
-	static boolean[] visited;
-	static Queue<Integer> queue;
+    static int bfs(int start) {
+        int count = 0;
+        Queue<Integer> q = new ArrayDeque<>();
+        q.add(start);
+        visited[start] = true;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		int M = sc.nextInt();
-		adj = new int[N + 1][N + 1];
-		visited = new boolean[N + 1];
-		queue = new LinkedList<>();
-		for (int i = 0; i < M; i++) {
-			int a = sc.nextInt();
-			int b = sc.nextInt();
-			adj[a][b] = 1;
-			adj[b][a] = 1;
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            count++;
 
-		}
-		cnt = 0;
-		BFS(1);
-		System.out.println(cnt);
-	}
+            for (int next : adjList[cur]) {
+                if (!visited[next]) {
+                    q.add(next);
+                    visited[next] = true;
+                }
+            }
+        }
 
-    static void BFS(int v) {
-		queue.offer(v);
-		visited[v] = true;
+        return count;
+    }
 
-		while (!queue.isEmpty()) {
-			int t = queue.poll();
-			for (int i = 1; i <= N; i++) {
-				if (!visited[i] && adj[t][i] == 1) {
-					queue.offer(i);
-					visited[i] = true;
-					cnt++;
-				}
-			}
-		}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st;
 
-	}
+        int pcCount = Integer.parseInt(br.readLine());
+        int pairCount = Integer.parseInt(br.readLine());
 
+        visited = new boolean[pcCount + 1];
+        adjList = new ArrayList[pcCount + 1];
+        for (int i = 0; i < pcCount + 1; i++) {
+            adjList[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < pairCount; i++) {
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            adjList[u].add(v);
+            adjList[v].add(u);
+        }
+
+        int wormCount = bfs(1) - 1;
+
+        bw.write(String.valueOf(wormCount));
+        bw.flush();
+        bw.close();
+    }
 }
