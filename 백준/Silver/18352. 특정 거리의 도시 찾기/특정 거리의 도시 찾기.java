@@ -1,71 +1,81 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		StringBuilder sb = new StringBuilder();
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		int X = Integer.parseInt(st.nextToken());
-		List<Integer>[] adjList = new ArrayList[N + 1];
-		boolean[] visited = new boolean[N + 1];
-		for (int i = 0; i < adjList.length; i++) {
-			adjList[i] = new ArrayList<>();
-		}
+    static int N, M, K, X;
+    static List<Integer>[] adjList;
+    static boolean[] visited;
+    static ArrayList<Integer> distanceK;
 
-		for (int i = 0; i < M; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			adjList[Integer.parseInt(st.nextToken())].add(Integer.parseInt(st.nextToken()));
-		}
-		int count = 0;
-		Queue<Integer> q = new LinkedList<>();
-		q.offer(X);
-		visited[X] = true;
-		while (!q.isEmpty()) {
-			if (count == K) {
-				int[] ans = new int[q.size()];
-				for (int i = 0; i < ans.length; i++) {
-					ans[i] = q.poll();
-				}
-				Arrays.sort(ans);
-				for (int i = 0; i < ans.length; i++) {
-					sb.append(ans[i]).append("\n");
-				}
-				break;
-			}
+    static void bfs() {
+        Queue<Integer> q = new LinkedList<>();
+        visited = new boolean[N + 1];
+        distanceK = new ArrayList<>();
+        int distance = 0;
 
-			int size = q.size();
-			for (int k = 0; k < size; k++) {
-				int num = q.poll();
-				for (int i = 0; i < adjList[num].size(); i++) {
-					if (!visited[adjList[num].get(i)]) {
-						q.offer(adjList[num].get(i));
-						visited[adjList[num].get(i)] = true;
-					}
-				}
+        q.add(X);
+        visited[X] = true;
 
-			}
-			count++;
-		} // while
+        while (!q.isEmpty()) {
+            if (distance == K) {
+                while (!q.isEmpty()) {
+                    distanceK.add(q.poll());
+                }
+                break;
+            }
 
-		if (sb.length() == 0) {
-			sb.append(-1);
-		}
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                int cur = q.poll();
+                for (int next : adjList[cur]) {
+                    if (!visited[next]) {
+                        q.add(next);
+                        visited[next] = true;
+                    }
+                }
+            }
 
-		System.out.println(sb.toString());
+            distance++;
+        }
+    }
 
-	}// end of main
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
 
-}// end of class
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+        X = Integer.parseInt(st.nextToken());
+
+        adjList = new ArrayList[N + 1];
+        for (int i = 0; i <= N; i++) {
+            adjList[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < M; i++) {
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            adjList[u].add(v);
+        }
+
+        bfs();
+
+        if (distanceK.isEmpty()) {
+            sb.append("-1");
+        } else {
+            Collections.sort(distanceK);
+            for (int city : distanceK) {
+                sb.append(city).append('\n');
+            }
+        }
+
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+}
