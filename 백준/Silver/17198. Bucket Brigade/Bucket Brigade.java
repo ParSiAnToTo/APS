@@ -4,14 +4,13 @@ import java.util.*;
 public class Main {
 
     static boolean[][] farm;
-    static int[][] distance;
     static int[] dr = {-1, 1, 0, 0};
     static int[] dc = {0, 0, -1, 1};
 
     static int bfs(int lakeR, int lakeC, int barnR, int barnC) {
         Queue<int[]> q = new ArrayDeque<>();
         q.add(new int[]{lakeR, lakeC, 0});
-        distance[lakeR][lakeC] = 0;
+        farm[lakeR][lakeC] = true;
 
         while (!q.isEmpty()) {
             int[] cur = q.poll();
@@ -19,19 +18,23 @@ public class Main {
             int c = cur[1];
             int dist = cur[2];
 
+            if (r == barnR && c == barnC) {
+                return dist;
+            }
+
             for (int i = 0; i < 4; i++) {
                 int nr = r + dr[i];
                 int nc = c + dc[i];
-                if (nr >= 0 && nr < 10 && nc >= 0 && nc < 10 && !farm[nr][nc]) {
-                    if (distance[nr][nc] > dist + 1) {
-                        distance[nr][nc] = dist + 1;
+                if (nr >= 0 && nr < 10 && nc >= 0 && nc < 10) {
+                    if (!farm[nr][nc]) {
+                        farm[nr][nc] = true;
                         q.add(new int[]{nr, nc, dist + 1});
                     }
                 }
             }
         }
 
-        return distance[barnR][barnC] == Integer.MAX_VALUE ? -1 : distance[barnR][barnC];
+        return -1;
     }
 
     public static void main(String[] args) throws IOException {
@@ -39,11 +42,6 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         farm = new boolean[10][10];
-        distance = new int[10][10];
-        for (int i = 0; i < 10; i++) {
-            Arrays.fill(distance[i], Integer.MAX_VALUE);
-        }
-
         int barnR = 0, barnC = 0, lakeR = 0, lakeC = 0;
 
         for (int i = 0; i < 10; i++) {
@@ -62,7 +60,7 @@ public class Main {
             }
         }
 
-        int bucketBrigadeLength = bfs(lakeR, lakeC, barnR, barnC) - 1;
+        int bucketBrigadeLength = bfs(lakeR, lakeC, barnR, barnC) -1;
 
         bw.write(String.valueOf(bucketBrigadeLength));
         bw.flush();
