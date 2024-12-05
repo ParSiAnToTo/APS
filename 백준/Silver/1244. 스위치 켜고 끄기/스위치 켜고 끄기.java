@@ -1,67 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.*;
 import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int N = Integer.parseInt(br.readLine());
-		String line = br.readLine();
-		String[] lineString = line.split(" ");
-		int[] switchData = new int[N];
-		for (int input = 0; input < N; input++) {
-			switchData[input] = Integer.parseInt(lineString[input]);
-		}
-		int stdN = Integer.parseInt(br.readLine());
 
-		StringTokenizer st;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < stdN; i++) {
-			st = new StringTokenizer(br.readLine());
-			int sex = Integer.parseInt(st.nextToken());
-			int switchIdx = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(br.readLine());
+        int[] switchLine = new int[N];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            switchLine[i] = Integer.parseInt(st.nextToken());
+        }
+        
+        int studentNumber = Integer.parseInt(br.readLine());
+        for (int i = 0; i < studentNumber; i++) {
+            String[] command = br.readLine().split(" ");
+            int sex = Integer.parseInt(command[0]);
+            int switchIndex = Integer.parseInt(command[1]) - 1;
 
-			if (sex == 1) { // 남학생일때
-				for (int male = switchIdx; male < N + 1; male += switchIdx) {
-					if (switchData[male - 1] == 0) {
-						switchData[male - 1] = 1;
-					} else {
-						switchData[male - 1] = 0;
-					} // 남학생이면 스위치인덱스 배수 값 전환
+            if (sex == 1) {
+                for (int j = switchIndex; j < N; j += (switchIndex + 1)) {
+                    switchLine[j] = 1 - switchLine[j];
+                }
+            } else {
+                int left = switchIndex - 1;
+                int right = switchIndex + 1;
+                switchLine[switchIndex] = 1 - switchLine[switchIndex];
 
-				} // 남학생일 경우의 명령 반복 완료
-
-			} else { // 여학생일때
-				for (int j = 0; switchIdx - j > 0 && switchIdx + j < N + 1; j++) {
-					if (switchData[switchIdx - 1 - j] == switchData[switchIdx - 1 + j]) {
-						if (switchData[switchIdx - 1 - j] == 0) {
-							switchData[switchIdx - 1 - j] = 1;
-							switchData[switchIdx - 1 + j] = 1;
-						} else {
-							switchData[switchIdx - 1 - j] = 0;
-							switchData[switchIdx - 1 + j] = 0;
-						} 
-                           
-					}else
+                while (true) {
+                    if (left >= 0 && right < N && switchLine[left] == switchLine[right]) {
+                        switchLine[left] = 1 - switchLine[left];
+                        switchLine[right] = 1 - switchLine[right];
+                        left--;
+                        right++;
+                    } else {
                         break;
-				}
-			}
+                    }
+                }
+            }
+        }
 
-		}
+        for (int i = 0; i < N; i++) {
+            sb.append(switchLine[i]).append(" ");
+            if ((i + 1) % 20 == 0) {
+                sb.append("\n");
+            }
+        }
 
-		int i = 1;
-		StringBuilder sb = new StringBuilder();
-		sb.append(switchData[0]).append(" ");
-		while (i < N) {
-			if (i % 20 == 0) {
-				sb.append("\n");
-			}
-			sb.append(switchData[i]).append(" ");
-			i++;
-		}
-		System.out.println(sb.toString());
-
-	}
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
 }
