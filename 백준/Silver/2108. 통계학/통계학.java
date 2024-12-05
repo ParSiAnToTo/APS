@@ -1,63 +1,74 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		int N = Integer.parseInt(br.readLine());
-		int[] arr = new int[8001];
-		int max = -4001;
-		int min = 4001;
-		for (int i = 0; i < N; i++) {
-			int val = Integer.parseInt(br.readLine()); // data input
-			arr[val+4000]++;
-			if(max < val) { //max tracking
-				max = val;
-			}
-			
-			if(min > val) { //min tracking
-				min = val;
-			}
-			
-		}
-		
-		int ari = 0;
-		int med = 0;
-		int mod = 0;
-		int ans2 = 0; // median
-		int ans3 = 0; // mode
-		boolean chk = false;
-		for (int i = 0; i < arr.length; i++) {
-			if(arr[i]!=0) {
-				ari += (i-4000)*arr[i];
-				if(med< (N+1)/2) {
-					med += arr[i];
-					ans2 = i-4000;
-				}
-				
-				if(mod < arr[i]) {
-					mod = arr[i];
-					ans3 = i-4000;
-					chk = true; // mode find check
-				} else if (mod == arr[i] && chk) {
-					ans3 = i - 4000; // second mode
-					chk = false;
-				}
-				
-			}
-			
-			
-		}
-		
-		int ans1 = (int) Math.round((double) ari / N);
-		System.out.println(ans1); //arithmetic mean
-		System.out.println(ans2); //median
-		System.out.println(ans3); // mode
-		System.out.println(max - min); //range
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-	} // end of main
+        int N = Integer.parseInt(br.readLine());
+        int[] freqArr = new int[8001];
+        for (int i = 0; i < N; i++) {
+            int value = Integer.parseInt(br.readLine());
+            freqArr[4000 + value]++;
+        }
 
-} // end of class
+        int mean = 0;
+        int median = 0;
+        int mode = 0;
+        int range = 0;
+
+        int sum = 0;
+        for (int i = 0; i < freqArr.length; i++) {
+            sum += freqArr[i] * (i - 4000);
+        }
+        mean = (int) Math.round((double) sum / N);
+
+        int count = 0;
+        for (int i = 0; i < freqArr.length; i++) {
+            count += freqArr[i];
+            if (count >= 1 + N / 2) {
+                median = i - 4000;
+                break;
+            }
+        }
+
+        int freq = 0;
+        boolean dupChk = false;
+        for (int i = 0; i < freqArr.length; i++) {
+            if (freq < freqArr[i]) {
+                freq = freqArr[i];
+                mode = i - 4000;
+                dupChk = true;
+            } else if (freq == freqArr[i] && dupChk) {
+                mode = i - 4000;
+                dupChk = false;
+            }
+        }
+
+        int minRange = 0;
+        int maxRange = 0;
+        for (int i = 0; i < freqArr.length; i++) {
+            if (freqArr[i] > 0) {
+                minRange = i - 4000;
+                break;
+            }
+        }
+
+        for (int i = 8000; i >= 0; i--) {
+            if (freqArr[i] > 0) {
+                maxRange = i - 4000;
+                break;
+            }
+        }
+
+        range = maxRange - minRange;
+
+        sb.append(mean).append(" ").append(median).append(" ").append(mode).append(" ").append(range).append(" ");
+
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+}
