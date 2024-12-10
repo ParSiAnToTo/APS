@@ -1,52 +1,51 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static int[] nums;
-	public static int[] result;
-	public static boolean[] visited;
-	public static int N;
-	public static int M;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		M = sc.nextInt();
+    static int N, M;
+    static StringBuilder sb = new StringBuilder();
+    static int[] nums;
+    static int[] result;
+    static boolean[] checked;
 
-		nums = new int[N];
-		for (int i = 1; i <= N; i++) {
-			nums[i - 1] = i;
-		}
-		result = new int[M];
-		visited = new boolean[N];
+    static void combination(int depth) {
+        if (depth == M) {
+            for (int i = 0; i < M; i++) {
+                sb.append(result[i]).append(" ");
+            }
+            sb.append("\n");
+            return;
+        }
 
-		dfs(N, M, 0);
+        for (int i = 1; i <= N; i++) {
+            if (!checked[i]) {
+                checked[i] = true;
+                result[depth] = nums[i];
+                combination(depth + 1);
+                checked[i] = false;
+            }
+        }
+    }
 
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	public static void dfs(int n, int m, int depth) {
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        checked = new boolean[N + 1];
+        nums = new int[N + 1];
+        result = new int[M];
+        for (int i = 1; i <= N; i++) {
+            nums[i] = i;
+        }
 
-		if (depth == M) {
+        combination(0);
 
-			for (int i = 0; i < depth; i++) {
-				System.out.print(result[i] + " ");
-			}
-			System.out.println();
-			return;
-		}
-
-		for (int j = 0; j < n; j++) {
-
-			if (!visited[j]) {
-
-				visited[j] = true;
-				result[depth] = nums[j];
-
-				dfs(N, M, depth + 1);
-				visited[j] = false;
-			}
-
-		}
-
-	} // dfs
-
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
 }
