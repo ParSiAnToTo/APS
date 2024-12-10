@@ -1,62 +1,70 @@
-import java.util.*;
-import java.lang.*;
 import java.io.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
-public class Main
-{
-	public static void main (String[] args) throws java.lang.Exception
-	{
+public class Main {
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        int r = Integer.parseInt(st.nextToken());
+    static int n, m, r;
+    static int[] itemValue;
+    static int[][] adj;
 
-        int[] itemList = new int[n+1];
-        st = new StringTokenizer(br.readLine(), " ");
-        for (int i = 1; i <= n; i++) { 
-        	itemList[i]=Integer.parseInt(st.nextToken());
-        }
-        
-        int[][] adjArr = new int[n + 1][n + 1];
- 
-        for(int i=0; i<=n; i++){
-        	Arrays.fill(adjArr[i], 3001);
-        	adjArr[i][i]=0;
-        }
-        
-        for (int i = 0; i < r; i++) {
-        	st = new StringTokenizer(br.readLine(), " ");
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-			int l = Integer.parseInt(st.nextToken());
-			adjArr[a][b]=l;
-			adjArr[b][a]=l;
-        }
-        // 플로이드 워셜
-        for (int i = 1; i <= n; i++) { // 중간 노드
-            for (int j = 1; j <= n; j++) { // 시작 노드
-                for (int j2 = 1; j2 <= n; j2++) { // 도착 노드
-                    adjArr[j][j2] = Math.min(adjArr[j][j2], adjArr[j][i] + adjArr[i][j2]);
+    static void FloydWarshall() {
+        for (int stopOver = 1; stopOver <= n; stopOver++) {
+            for (int start = 1; start <= n; start++) {
+                for (int end = 1; end <= n; end++) {
+                    if (adj[start][end] > adj[start][stopOver] + adj[stopOver][end]) {
+                        adj[start][end] = adj[start][stopOver] + adj[stopOver][end];
+                    }
                 }
             }
         }
-        
-        int ans = 0;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        r = Integer.parseInt(st.nextToken());
+
+        itemValue = new int[n + 1];
+        st = new StringTokenizer(br.readLine());
         for (int i = 1; i <= n; i++) {
-			int sum =0;
-			for (int j = 1; j <= n; j++) {
-				if(adjArr[i][j]<=m){
-					sum+=itemList[j]; // 아이템 합
-				}
-			
-        	}
-        	ans = Math.max(ans, sum);
+            itemValue[i] = Integer.parseInt(st.nextToken());
+        }
+
+        adj = new int[n + 1][n + 1];
+        for (int i = 0; i <= n; i++) {
+            Arrays.fill(adj[i], 150001);
+            adj[i][i] = 0;
+        }
+
+        for (int i = 0; i < r; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+            adj[a][b] = w;
+            adj[b][a] = w;
+        }
+
+        FloydWarshall();
+
+        int maxItemValue = 0;
+        for (int i = 1; i <= n; i++) {
+            int sum = 0;
+            for (int j = 1; j <= n; j++) {
+                if (adj[i][j] <= m) {
+                    sum += itemValue[j];
+                }
+            }
+            maxItemValue = Math.max(maxItemValue, sum);
         }
         
-        
-        System.out.println(ans);
-        
-	}
+        bw.write(String.valueOf(maxItemValue));
+        bw.flush();
+        bw.close();
+    }
 }
