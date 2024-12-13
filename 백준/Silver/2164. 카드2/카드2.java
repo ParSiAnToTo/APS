@@ -1,26 +1,24 @@
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
-
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int N = sc.nextInt();
-		Queue<Integer> queue = new LinkedList<>();
-		for(int i =1; i<=N; i++) {
-			queue.offer(i);
-		}
-		
-		//card
-		while(queue.size()>1) {
-			queue.poll();
-			int move = queue.poll();
-			queue.offer(move);
-		}
-		
-		System.out.println(queue.peek());
-		
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int N = Integer.parseInt(br.readLine());
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 1; i <= N; i++) {
+            q.add(i);
+        }
+        for (int i = 1; i < N; i++) {
+            q.poll();
+            q.offer(q.poll());
+        }
+
+        bw.write(String.valueOf(q.poll()));
+        bw.flush();
+        bw.close();
+    }
 }
