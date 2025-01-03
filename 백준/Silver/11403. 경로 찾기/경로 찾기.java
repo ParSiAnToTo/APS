@@ -1,47 +1,43 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.StringTokenizer;
+
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
+        int N = Integer.parseInt(br.readLine());
 
-		int N = Integer.parseInt(st.nextToken());
+        int[][] adjArr = new int[N][N];
 
-		int[][] arr = new int[N][N];
+        for (int i = 0; i < N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < N; j++) {
+                adjArr[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
 
-		for (int i = 0; i < arr.length; i++) {
-			st = new StringTokenizer(br.readLine(), " ");
-			for (int j = 0; j < arr.length; j++) {
-				arr[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
+        for (int stopOver = 0; stopOver < N; stopOver++) {
+            for (int start = 0; start < N; start++) {
+                for (int end = 0; end < N; end++) {
+                    if (adjArr[start][stopOver] == 1 && adjArr[stopOver][end] == 1) {
+                        adjArr[start][end] = 1;
+                    }
+                }
+            }
+        }
 
-		// 경로 체크
-		for (int i = 0; i < arr.length; i++) { // 중간 노드
-			for (int j = 0; j < arr.length; j++) { // 시작 노드
-				for (int k = 0; k < arr.length; k++) { // 도착 노드
-					if (arr[j][i] == 1 && arr[i][k] == 1) { // 경유 가능 여부 확인
-						arr[j][k] = 1;
-					}
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                sb.append(adjArr[i][j]).append(' ');
+            }
+            sb.append("\n");
+        }
 
-				}
-			}
-		}
-
-		for (int i = 0; i < arr.length; i++) {
-			for (int j = 0; j < arr.length; j++) {
-				sb.append(arr[i][j]).append(" ");
-			}
-			sb.append("\n");
-		}
-
-		System.out.println(sb.toString());
-
-	} // end of main
-
-} // end of class
+        bw.write(sb.toString());
+        bw.flush();
+        bw.close();
+    }
+}
