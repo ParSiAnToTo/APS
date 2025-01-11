@@ -1,56 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-		StringBuilder sb = new StringBuilder();
-		int N = Integer.parseInt(st.nextToken()); // length
-		int M = Integer.parseInt(st.nextToken()); // target
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder result = new StringBuilder();
 
-		int[] arrA = new int[N]; // A data input array
-		int[] arrB = new int[M]; // B data input array
-		st = new StringTokenizer(br.readLine(), " ");
-		for (int i = 0; i < N; i++) { // array A data input
-			arrA[i] = Integer.parseInt(st.nextToken());
-		}
-		st = new StringTokenizer(br.readLine(), " ");
-		for (int i = 0; i < M; i++) { // array B data input
-			arrB[i] = Integer.parseInt(st.nextToken());
-		}
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
 
-		int idxA = 0;
-		int idxB = 0;
+        int[] arrA = new int[N];
+        int[] arrB = new int[M];
 
-		while (idxA < N && idxB < M) {
-			if (arrA[idxA] <= arrB[idxB]) {
-				sb.append(arrA[idxA]).append(" ");
-				idxA++;
-			} else {
-				sb.append(arrB[idxB]).append(" ");
-				idxB++;
-			}
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < N; i++) {
+            arrA[i] = Integer.parseInt(st.nextToken());
+        }
 
-			if (idxA == N) { // arrA 전부 입력 시
-				for (int i = idxB; i < M; i++) {
-					sb.append(arrB[i]).append(" ");
-				}
-			}
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < M; i++) {
+            arrB[i] = Integer.parseInt(st.nextToken());
+        }
 
-			if (idxB == M) { // arrB 전부 입력 시
-				for (int i = idxA; i < N; i++) {
-					sb.append(arrA[i]).append(" ");
-				}
-			}
+        int idxA = 0;
+        int idxB = 0;
 
-		} // end of two pointer
+        while (idxA < N && idxB < M) {
+            if (arrA[idxA] > arrB[idxB]) {
+                result.append(arrB[idxB]).append(' ');
+                idxB++;
+            } else {
+                result.append(arrA[idxA]).append(' ');
+                idxA++;
+            }
 
-		System.out.println(sb.toString());
+            if(idxA == N){
+                while(idxB < M){
+                    result.append(arrB[idxB]).append(' ');
+                    idxB++;
+                }
+            } else if(idxB == M){
+                while(idxA < N){
+                    result.append(arrA[idxA]).append(' ');
+                    idxA++;
+                }
+            }
+        }
 
-	} // end of main
-
-} // end of class
+        bw.write(result.toString());
+        bw.flush();
+        bw.close();
+    }
+}
