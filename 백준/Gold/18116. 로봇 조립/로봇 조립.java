@@ -39,7 +39,9 @@ public class Main {
         }
 
         s = new int[1000001];
-        Arrays.fill(s, 1);
+        for (int i = 0; i < s.length; i++) {
+            s[i] = 1;
+        }
 
         int N = Integer.parseInt(st.nextToken());
         for (int i = 0; i < N; i++) {
