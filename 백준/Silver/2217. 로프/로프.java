@@ -1,27 +1,27 @@
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
 
 public class Main {
+
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        ArrayList<Integer> ropes = new ArrayList<>();
-
+        int N = Integer.parseInt(br.readLine());
+        int[] ropes = new int[N];
         for (int i = 0; i < N; i++) {
-            ropes.add(Integer.parseInt(br.readLine()));
-        }
-        Collections.sort(ropes, Collections.reverseOrder());
-
-        int maxWeight = 0;
-        for (int i = 0; i < N; i++) {
-            maxWeight = Math.max(maxWeight, ropes.get(i) * (i + 1));
+            ropes[i] = Integer.parseInt(br.readLine());
         }
 
-        bw.write(String.valueOf(maxWeight));
+        Arrays.sort(ropes);
+
+        int max = 0;
+        for (int i = 0; i < N; i++) {
+                max = Math.max(ropes[i] * (N - i), max);
+        }
+
+        bw.write(String.valueOf(max));
         bw.flush();
         bw.close();
     }
