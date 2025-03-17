@@ -14,8 +14,11 @@ public class Main {
             StringTokenizer st = new StringTokenizer(br.readLine());
             while (st.hasMoreTokens()) {
                 String s = st.nextToken();
-                StringBuilder part = new StringBuilder(s);
-                result.append(part.reverse()).append(' ');
+                int len = s.length();
+                for (int j = len - 1; j >= 0; j--) {
+                    result.append(s.charAt(j));
+                }
+                result.append(' ');
             }
             result.append('\n');
         }
@@ -24,5 +27,4 @@ public class Main {
         bw.flush();
         bw.close();
     }
-
 }
