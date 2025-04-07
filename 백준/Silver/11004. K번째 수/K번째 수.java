@@ -1,6 +1,6 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -13,7 +13,7 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-        LinkedList<Integer> list = new LinkedList<>();
+        ArrayList<Integer> list = new ArrayList<>();
 
         st = new StringTokenizer(br.readLine());
         for (int i = 0; i < N; i++) {
