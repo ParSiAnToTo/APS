@@ -1,8 +1,10 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
+
+    static int[] dr = {0, -1, 1, 0, 0};
+    static int[] dc = {0, 0, 0, 1, -1};
 
     private static void bombSetup(int[][] board) {
         for (int i = 0; i < board.length; i++) {
@@ -14,7 +16,7 @@ public class Main {
         }
     }
 
-    private static void bombCount(int[][] board) {
+    private static void bombCount(int[][] board, boolean[][] isExplode) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] > 0) {
@@ -24,24 +26,27 @@ public class Main {
         }
     }
 
-    private static void bombExplode(int[][] board) {
-        ArrayList<int[]> targetList = new ArrayList<>();
+    private static void bombExplode(int[][] board, boolean[][] isExplode) {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == 0) {
-                    targetList.add(new int[]{i, j});
+                    isExplode[i][j] = true;
                 }
             }
         }
-
-        for (int[] target : targetList) {
-            int i = target[0];
-            int j = target[1];
-            board[i][j] = -999;
-            board[i - 1 >= 0 ? i - 1 : i][j] = -999;
-            board[i + 1 < board.length ? i + 1 : i][j] = -999;
-            board[i][j - 1 >= 0 ? j - 1 : j] = -999;
-            board[i][j + 1 < board[i].length ? j + 1 : j] = -999;
+        for (int i = 0; i < isExplode.length; i++) {
+            for (int j = 0; j < isExplode[i].length; j++) {
+                if (isExplode[i][j]) {
+                    for (int k = 0; k < 5; k++) {
+                        int nr = i + dr[k];
+                        int nc = j + dc[k];
+                        if (nr >= 0 && nr < board.length && nc >= 0 && nc < board[i].length) {
+                            board[nr][nc] = -999;
+                        }
+                    }
+                    isExplode[i][j] = false;
+                }
+            }
         }
     }
 
@@ -54,6 +59,7 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
 
         int[][] board = new int[R][C];
+        boolean[][] isExplode = new boolean[R][C];
         for (int i = 0; i < R; i++) {
             String line = br.readLine();
             for (int j = 0; j < C; j++) {
@@ -66,8 +72,8 @@ public class Main {
             if (i % 2 == 0) {
                 bombSetup(board);
             }
-            bombCount(board);
-            bombExplode(board);
+            bombCount(board, isExplode);
+            bombExplode(board, isExplode);
         }
 
         StringBuilder result = new StringBuilder();
